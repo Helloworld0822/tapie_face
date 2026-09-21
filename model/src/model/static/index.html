@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="YOLO 얼굴 정렬과 배경·헤어 억제를 적용한 얼굴 유사도 분석 도구">
+    <title>TAPIE FACE · 얼굴 닮음 분석</title>
+    <link rel="stylesheet" href="/static/app.css?v=6">
+    <script type="module" src="/static/app.js?v=6"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="wordmark" href="/" aria-label="TAPIE FACE 홈">TAPIE FACE</a>
+      <div class="header-divider" aria-hidden="true"></div>
+      <div class="model-state" id="model-state" data-state="idle" role="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="model-message">상태 확인 중</span>
+      </div>
+      <div class="header-actions">
+        <span class="index-count"><strong id="person-count">0</strong>명 · <strong id="image-count">0</strong>장</span>
+        <button class="button button-secondary" id="reindex-button" type="button" aria-label="기준 벡터 다시 만들기">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5"/></svg>
+          <span>기준 벡터 다시 만들기</span>
+        </button>
+        <a class="text-link" href="/showcase">상태 보기</a>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="workbench" aria-labelledby="page-title">
+        <div class="panel input-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">AI 기반 얼굴 유사도 분석</p>
+              <h1 id="page-title">얼굴 닮음 분석</h1>
+            </div>
+            <p>한 장의 얼굴을 정렬하고<br>기준 인물과 비교합니다.</p>
+          </div>
+
+          <label class="upload-well" id="upload-well" for="image-input">
+            <input id="image-input" type="file" accept="image/jpeg,image/png,image/webp">
+            <svg class="upload-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"/></svg>
+            <span class="upload-title">사진을 올려주세요</span>
+            <span class="upload-copy">이미지를 끌어놓거나 클릭하여 선택하세요.</span>
+            <span class="upload-meta" id="upload-meta">JPG, PNG, WebP · 최대 10MB</span>
+          </label>
+
+          <div class="action-bar">
+            <p id="file-summary">선택된 사진이 없습니다.</p>
+            <button class="button button-primary" id="analyze-button" type="button" disabled>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <span>닮음 분석 시작</span>
+            </button>
+          </div>
+
+          <ol class="process-steps" aria-label="분석 단계">
+            <li><span>1</span><div><strong>YOLO 얼굴 검출</strong><small>얼굴과 5점 랜드마크 탐색</small></div></li>
+            <li><span>2</span><div><strong>5점 정렬</strong><small>눈·코·입을 표준 좌표로 보정</small></div></li>
+            <li><span>3</span><div><strong>배경·헤어 억제</strong><small>얼굴 구성 요소만 임베딩</small></div></li>
+          </ol>
+
+          <div class="correction-rail" id="correction-rail" aria-live="polite">
+            <article class="process-frame" data-frame="original">
+              <div class="frame-canvas"><img alt="업로드한 원본 얼굴" hidden></div>
+              <h2>원본 이미지</h2><p>입력 대기</p>
+            </article>
+            <article class="process-frame" data-frame="detected">
+              <div class="frame-canvas"><img alt="YOLO로 검출한 얼굴과 랜드마크" hidden></div>
+              <h2>YOLO 검출</h2><p>입력 대기</p>
+            </article>
+            <article class="process-frame" data-frame="aligned">
+              <div class="frame-canvas"><img alt="5점 랜드마크로 정렬한 얼굴" hidden></div>
+              <h2>5점 정렬</h2><p>입력 대기</p>
+            </article>
+            <article class="process-frame" data-frame="masked">
+              <div class="frame-canvas"><img alt="배경과 머리카락을 억제한 얼굴" hidden></div>
+              <h2>얼굴 영역</h2><p>입력 대기</p>
+            </article>
+          </div>
+        </div>
+
+        <aside class="panel result-panel" aria-labelledby="result-title">
+          <div class="result-heading">
+            <div><p class="eyebrow">비교 결과</p><h2 id="result-title">가장 닮은 인물</h2></div>
+            <button class="button button-secondary compact" id="reset-button" type="button" disabled>다른 사진</button>
+          </div>
+
+          <div class="result-empty" id="result-empty">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6M3 3l18 18"/></svg>
+            <strong>분석 결과가 여기에 표시됩니다</strong>
+            <p>기준 벡터를 준비하고 얼굴 사진을 선택해 주세요.</p>
+          </div>
+
+          <div class="result-content" id="result-content" hidden>
+            <div class="winner">
+              <div><span class="rank-badge">TOP 1</span><h3 id="winner-label">-</h3><p>표시용 유사도 점수</p></div>
+              <div class="score-wrap"><strong id="winner-score">0.0</strong><span>%</span><small id="winner-cosine">cos 0.0000</small></div>
+            </div>
+            <div class="score-track" aria-hidden="true"><span id="score-bar"></span></div>
+            <p class="interpretation" id="interpretation"></p>
+            <div class="quality-notice" id="quality-notice" hidden role="status"></div>
+            <div class="match-section">
+              <div class="subheading"><h3>유사 인물 순위</h3><span>코사인 · 표시 점수</span></div>
+              <ol class="match-list" id="match-list"></ol>
+            </div>
+          </div>
+
+          <div class="privacy-notice">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg>
+            <div><strong>유의사항</strong><p>이 점수는 신원 증명이 아닌 얼굴 특징 유사도입니다. 업로드 사진은 메모리에서만 처리하며 <span class="no-break">API가 저장하지 않습니다.</span> 기준 임베딩은 생체정보이므로 동의와 보호된 저장이 필요합니다.</p></div>
+          </div>
+          <div class="error-banner" id="error-banner" role="alert" hidden></div>
+        </aside>
+      </section>
+    </main>
+  </body>
+</html>

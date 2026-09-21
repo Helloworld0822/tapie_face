@@ -1,0 +1,108 @@
+[project]
+name = "model"
+version = "0.1.0"
+description = "YOLO-aligned, hair/background-suppressed face similarity workbench"
+readme = "README.md"
+authors = [
+    { name = "Helloworld0822", email = "a100822@naver.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "anyio>=4.9.0,<4.15.0",
+    "fastapi>=0.116.0",
+    "numpy>=2.2.0",
+    "python-multipart>=0.0.20",
+    "uniface[cpu]>=4.0.0",
+    "uvicorn[standard]>=0.35.0",
+]
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.31.0",
+    "httpx2[http2,brotli,zstd]>=0.28.0",
+    "pytest>=8.4.0",
+    "pytest-cov>=6.2.0",
+    "ruff>=0.12.0",
+]
+
+[project.scripts]
+model = "model.__main__:main"
+
+[build-system]
+requires = ["uv_build>=0.12.12,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.basedpyright]
+typeCheckingMode = "all"
+pythonVersion = "3.13"
+pythonPlatform = "All"
+include = ["src", "tests"]
+exclude = ["**/__pycache__", "**/.venv", "**/build", "**/dist"]
+reportUnusedCallResult = "warning"
+reportUnnecessaryTypeIgnoreComment = "error"
+reportUnusedVariable = "error"
+reportMissingParameterType = "error"
+reportPrivateUsage = "error"
+reportAny = "none"
+reportUnknownArgumentType = "none"
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812",
+    "ISC001",
+    "D203",
+    "D213",
+    "D100",
+    "D101",
+    "D104",
+    "D102",
+    "D103",
+    "D105",
+    "D107",
+    "CPY001",
+    "FBT001",
+    "FBT002",
+    "TD002",
+    "TD003",
+    "FIX002",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "ARG", "PLR2004", "SLF001", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.Query",
+    "fastapi.Path",
+    "fastapi.Body",
+    "fastapi.Header",
+    "fastapi.Cookie",
+    "fastapi.File",
+    "fastapi.Form",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-config", "--strict-markers"]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true

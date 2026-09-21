@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Generated face-vector index and local biometric references
+.data/
+references/*/
+!references/README.md
+
+# Visual QA output
+.omo/evidence/face-similarity/actual/
+.omo/evidence/*-clone-fidelity.md

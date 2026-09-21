@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TAPIE FACE · UI 상태 보기</title>
+    <link rel="stylesheet" href="/static/app.css?v=6">
+  </head>
+  <body>
+    <header class="app-header"><a class="wordmark" href="/">TAPIE FACE</a><div class="header-divider"></div><div class="model-state" data-state="ready"><span class="status-dot"></span><span>프리미티브 상태</span></div><a class="text-link push-right" href="/">분석 화면으로</a></header>
+    <main class="showcase">
+      <div class="showcase-heading"><p class="eyebrow">Design system inspection</p><h1>컴포넌트 상태 보기</h1><p>빈 상태, 로딩, 성공, 경고, 오류, 비활성, 포커스, <span class="no-break">긴 콘텐츠를</span> 한 화면에서 확인합니다.</p></div>
+      <section class="showcase-grid" aria-label="버튼 상태">
+        <article class="showcase-card"><h2>Actions</h2><div class="showcase-row"><button class="button button-primary">분석 시작</button><button class="button button-secondary">다시 만들기</button><button class="button button-primary" disabled>비활성</button><button class="button button-secondary forced-focus">키보드 포커스</button></div></article>
+        <article class="showcase-card"><h2>Model status</h2><div class="showcase-stack"><div class="model-state" data-state="ready"><span class="status-dot"></span><span>모델 준비됨</span></div><div class="model-state" data-state="indexing"><span class="status-dot"></span><span>벡터 생성 중</span></div><div class="model-state" data-state="error"><span class="status-dot"></span><span>모델 준비 실패</span></div></div></article>
+        <article class="showcase-card"><h2>Upload states</h2><div class="upload-well showcase-well"><span class="upload-title">빈 업로드 영역</span><span class="upload-copy">클릭하거나 파일을 끌어놓으세요.</span></div><div class="upload-well showcase-well is-dragging"><span class="upload-title">여기에 놓으세요</span><span class="upload-copy">드래그 활성 상태</span></div><div class="upload-well showcase-well has-file"><span class="upload-title">portrait.jpg</span><span class="upload-copy">선택 완료 · 1.2MB</span></div><div class="upload-well showcase-well is-error"><span class="upload-title">파일 오류</span><span class="upload-copy">지원하지 않는 형식입니다.</span></div></article>
+        <article class="showcase-card"><h2>Processing</h2><div class="correction-rail showcase-frames"><article class="process-frame is-loading"><div class="frame-canvas"></div><h2>YOLO 검출</h2><p>처리 중</p></article><article class="process-frame is-success"><div class="frame-canvas frame-demo"></div><h2>5점 정렬</h2><p>완료</p></article><article class="process-frame is-error"><div class="frame-canvas"></div><h2>얼굴 영역</h2><p>처리 실패</p></article></div></article>
+        <article class="showcase-card"><h2>Notices</h2><div class="quality-notice">얼굴 각도가 큽니다. 정면 사진에서 <span class="no-break">결과가 더 안정적입니다.</span></div><div class="error-banner showcase-error">얼굴을 찾지 못했습니다.</div><div class="privacy-notice"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></svg><div><strong>개인정보 안내</strong><p>질의 사진은 저장하지 않으며 기준 벡터는 보호된 저장이 필요합니다.</p></div></div></article>
+        <article class="showcase-card"><h2>Result states</h2><div class="result-empty showcase-result-empty"><strong>아직 분석 결과가 없습니다</strong><p>사진을 선택하면 결과가 표시됩니다.</p></div><div class="winner showcase-winner"><div><span class="rank-badge">TOP 1</span><h3>reference-person</h3><p>표시용 유사도 점수</p></div><div class="score-wrap"><strong>82.4</strong><span>%</span><small>cos 0.6123</small></div></div><div class="score-track"><span class="showcase-score"></span></div></article>
+        <article class="showcase-card"><h2>Long content</h2><ol class="match-list"><li class="match-row"><span class="match-rank">1</span><div class="match-name" title="아주 긴 기준 인물 이름이 들어왔을 때 말줄임표 처리 확인용 라벨">아주 긴 기준 인물 이름이 들어왔을 때 말줄임표 처리 확인용 라벨</div><div class="match-metric"><strong>82.4%</strong><small>cos 0.6123 · 12장</small></div></li></ol></article>
+      </section>
+    </main>
+  </body>
+</html>
