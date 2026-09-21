@@ -1,0 +1,26 @@
+.DS_Store
+
+# Python caches, environments, and build output
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+*.egg-info/
+
+# JavaScript dependencies and generated Vite output
+node_modules/
+**/node_modules/
+**/.vite/
+frontend/dist/
+
+# Local biometric data and generated face indexes
+data/
+**/.data/
+
+# Browser and agent evidence generated during QA
+.omo/evidence/face-similarity/actual/
+.omo/evidence/*-clone-fidelity.md
