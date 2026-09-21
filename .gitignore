@@ -1,4 +1,7 @@
 .DS_Store
+.env
+.env.*
+!.env.example
 
 # Python caches, environments, and build output
 __pycache__/
@@ -20,6 +23,7 @@ frontend/dist/
 # Local biometric data and generated face indexes
 data/
 **/.data/
+model/references/*/
 
 # Browser and agent evidence generated during QA
 .omo/evidence/face-similarity/actual/
