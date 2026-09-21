@@ -87,7 +87,10 @@ class UniFaceEngine:
 
 def _decode_image(image_bytes: bytes) -> ImageArray:
     encoded = np.frombuffer(image_bytes, dtype=np.uint8)
-    image = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
+    try:
+        image = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
+    except cv2.error as error:
+        raise InvalidImageError from error
     if image is None:
         raise InvalidImageError
     return np.asarray(image, dtype=np.uint8)
